@@ -17,8 +17,7 @@ const Login = () => {
 
   const handleButtonClick = () => {
     /* validate form data */
-    console.log(name.current.value)
-    const message = isSignInForm ? checkValidData(email.current.value, password.current.value) : checkValidData(name.current.value, email.current.value, password.current.value)
+    const message = isSignInForm ? checkValidData(email.current.value, password.current.value) : checkValidData(email.current.value, password.current.value, name.current.value,)
     setErrorMessage(message)
   }
 
@@ -35,7 +34,7 @@ const Login = () => {
         <input ref={password} type='password' placeholder='Password' className='right-0 left-0 p-3 m-4 w-11/12' />
         <p className='text-red-600 font-bold text-base ml-3'>{errorMessage}</p>
         <button className='right-0 left-0 text-base text-center bg-red-700  text-white p-3 m-4  w-11/12 rounded-sm' onClick={handleButtonClick}>{isSignInForm ? "Sign In" : "Sign Up"}</button>
-        <p className='text-white mt-4 ml-4 cursor-pointer' onClick={toggleOnSignUp} >{isSignInForm ? "New to Netflix? Sign Up Now" : "You're Already Registered! Please Sign Up"}</p>
+        <p className='text-white mt-4 ml-4 cursor-pointer' onClick={toggleOnSignUp} >{isSignInForm ? "New to Netflix? Sign Up Now" : "If You're Already Registered! Please Sign In"}</p>
       </form>
     </div>
   )
