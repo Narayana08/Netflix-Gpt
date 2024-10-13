@@ -25,3 +25,4 @@
 - NetflixGpt
     - Search Bar
     - Movie Suggestions
+    - Create SignUp for User Account

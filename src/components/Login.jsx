@@ -1,4 +1,6 @@
 import React, { useRef, useState } from 'react'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../utils/firebase';
 import checkValidData from '../utils/validate'
 import Header from './Header'
 
@@ -16,9 +18,38 @@ const Login = () => {
   const password = useRef(null)
 
   const handleButtonClick = () => {
+
     /* validate form data */
     const message = isSignInForm ? checkValidData(email.current.value, password.current.value) : checkValidData(email.current.value, password.current.value, name.current.value,)
     setErrorMessage(message)
+    if (message) return
+
+    if (!isSignInForm) {
+      createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+        .then((userCredential) => {
+
+          const user = userCredential.user;
+          console.log(`Signed Up User Successfully!....${JSON.stringify(user)}`)
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(`Error while Signed Up !....errorCode:${errorCode} errorMessage:${errorMessage}`)
+          setErrorMessage(errorCode + "-" + errorMessage)
+        });
+    } else {
+      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(`Signed in user successfully ${JSON.stringify(user)}`)
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(`Error while Signed In !....errorCode:${errorCode} errorMessage:${errorMessage}`)
+          setErrorMessage(errorCode + "-" + errorMessage)
+        });
+    }
   }
 
   return (
