@@ -1,10 +1,17 @@
-import React, { useRef, useState } from 'react'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import Header from './Header'
 import { auth } from '../utils/firebase';
 import checkValidData from '../utils/validate'
-import Header from './Header'
+import { useNavigate } from 'react-router-dom';
+import React, { useRef, useState } from 'react'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useDispatch } from 'react-redux';
+import { addUser } from '../utils/userSlice';
+
 
 const Login = () => {
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const [isSignInForm, setIsSignInForm] = useState(true)
   const [errorMessage, setErrorMessage] = useState(true)
@@ -27,27 +34,36 @@ const Login = () => {
     if (!isSignInForm) {
       createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
         .then((userCredential) => {
-
           const user = userCredential.user;
-          console.log(`Signed Up User Successfully!....${JSON.stringify(user)}`)
+          updateProfile(user, {
+            displayName: name.current.value,  photoURL: "https://media.licdn.com/dms/image/v2/D5603AQEh6GmTKh4Y_g/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1725825523992?e=1734566400&v=beta&t=YMpqC2EftWX0i9G477AfrThbblkcsuIu424xUB-blQc",
+          }).then(() => {
+            console.log(`Signed Up User Successfully!....${JSON.stringify(user)}`)
+            const { uid, email, displayName, photoURL } = auth.currentUser;
+            dispatch(addUser({ uid, email, displayName, photoURL }))
+            navigate("/browser")
+          }).catch((error) => {
+            setErrorMessage(error.message)
+          })
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(`Error while Signed Up !....errorCode:${errorCode} errorMessage:${errorMessage}`)
-          setErrorMessage(errorCode + "-" + errorMessage)
+          setErrorMessage(error.message)
         });
     } else {
       signInWithEmailAndPassword(auth, email.current.value, password.current.value)
         .then((userCredential) => {
           const user = userCredential.user;
+          navigate("/browser")
           console.log(`Signed in user successfully ${JSON.stringify(user)}`)
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(`Error while Signed In !....errorCode:${errorCode} errorMessage:${errorMessage}`)
-          setErrorMessage(errorCode + "-" + errorMessage)
+          setErrorMessage("Email or Password is incorrect")
         });
     }
   }

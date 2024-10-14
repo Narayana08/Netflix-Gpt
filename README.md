@@ -26,3 +26,7 @@
     - Search Bar
     - Movie Suggestions
     - Create SignUp for User Account
+    - Implement Sign In user Api
+    - created Redux Store with userSlice
+    - Implemented Signout
+    - Updated Profile

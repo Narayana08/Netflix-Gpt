@@ -1,8 +1,10 @@
+import appStore from "./utils/appStore";
+import { Provider } from 'react-redux';
 import Body from "./components/Body";
 
 export default function App() {
   return (
-    <div>
+    <Provider store={appStore}>
       <Body />
-    </div>)
+    </Provider>)
 }
